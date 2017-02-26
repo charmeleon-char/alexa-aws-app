@@ -34,11 +34,11 @@ app.intent('search_keyword', {
                     });
                     res.say(resp).send();
                 } else {
-                    var prompt = 'Sorry, there are no results with that keyword!.';
+                    var resp = 'Sorry, there are no results with that keyword!.';
                     res.say(resp).send();
                 }
             }).catch(function(err) {
-                var prompt = err;
+                var resp = 'Sorry, an error has occurred.';
                 res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
             });
             return false;
