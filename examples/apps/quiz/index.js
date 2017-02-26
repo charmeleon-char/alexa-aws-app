@@ -87,7 +87,7 @@ app.intent('AMAZON.NextIntent', {
         }
         else {
             var correct = res.session('correct');
-            var msg = 'You guessed ' + correct + ' questions correctly';
+            var msg = 'No more questions. You guessed ' + correct + ' questions correctly';
             res.say(msg).send();
         }
     }
