@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Alexa = require('alexa-app');
 var app = new Alexa.app('quiz');
 var Questions = require('./questions');
-let quiz = [];
+// let quiz = [];
 
 app.launch(function(req, res) {
     var prompt = 'Lets play a quiz yeahh';
@@ -28,10 +28,17 @@ app.intent('quiz', {
         } else {
             var questions = new Questions();
             questions.getByCategory(category).then(function(response) {
-                quiz = response.results;
-            });
-            res.say(quiz[0]);
+                var quiz = response.body.results;
+                if (_.isEmpty(quiz)) {
+                    var prompt = 'I didn\'t hear a category name. Tell me the category please Bro';
+                    res.say(prompt).reprompt(reprompt).shouldEndSession(false);
+                    return true;
 
+                } else {
+                    console.log(quiz);
+                    res.say(quiz[0].type).reprompt(prompt).shouldEndSession(false);
+                }
+            });
         }
     }
 );
