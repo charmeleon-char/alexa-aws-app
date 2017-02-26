@@ -6,7 +6,7 @@ var app = new Alexa.app('class-chapters');
 var ReadChapter = require('./read-chapter');
 
 app.launch(function(req, res) {
-  var prompt = 'For delay information, tell me an Airport code.';
+  var prompt = 'Please tell me which chapter to read';
   res.say(prompt).reprompt(prompt).shouldEndSession(false);
 });
 
