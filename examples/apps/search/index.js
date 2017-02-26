@@ -2,15 +2,15 @@
 module.change_code = 1;
 var _ = require('lodash');
 var Alexa = require('alexa-app');
-var app = new Alexa.app('airportinfo');
-var FAADataHelper = require('./search_data_helper');
+var app = new Alexa.app('search_keyword');
+var SearchDataHelper = require('./search_data_helper');
 
 app.launch(function(req, res) {
-    var prompt = 'For delay information, tell me an Airport code.';
+    var prompt = 'Tell me a keyword for search information.';
     res.say(prompt).reprompt(prompt).shouldEndSession(false);
 });
 
-app.intent('searchkeyword', {
+app.intent('search_keyword', {
         'slots': {
             'KEYWORD': 'KEYWORD'
         },
@@ -18,22 +18,21 @@ app.intent('searchkeyword', {
     },
     function(req, res) {
         //get the slot
-        var keyword = req.slot('searchkeyword');
+        var keyword = req.slot('KEYWORD');
         var reprompt = 'Tell me a keyword for search information.';
         if (_.isEmpty(keyword)) {
             var prompt = 'Sorry, there are no results with that keyword!.';
             res.say(prompt).reprompt(reprompt).shouldEndSession(false);
             return true;
         } else {
-            var seachDataHelper = new seachDataHelper();
+            var searchDataHelper = new SearchDataHelper();
 
-            seachDataHelper.requestProgram(keyword).then(function(programRecomment) {
-                console.log(programRecomment);
-                var response = programRecomment['name'] + programRecomment['description'];
+            searchDataHelper.requestProgram(keyword).then(function(programRecomment) {
+                var response = 'Program name: ' + programRecomment['results'][0]['name'] + ' Description: ' + programRecomment['results'][0]['description'];
+                console.log(response);
                 res.say(response).send();
             }).catch(function(err) {
-                console.log(err.statusCode);
-                var prompt = 'Sorry, there are no results with that keyword! ' + keyword;
+                var prompt = err;
                 res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
             });
             return false;
