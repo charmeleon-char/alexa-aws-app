@@ -1,0 +1,20 @@
+{
+  "name": "oc-courses",
+  "version": "1.0.0",
+  "description": "A sample Alexa app",
+  "main": "index.js",
+  "author": "Matt Kruse <github@mattkruse.com> (http://mattkruse.com/)",
+  "license": "ISC",
+  "alexa": {
+    "applicationId": "amzn1.echo-sdk-ams.app.999999-d0ed-9999-ad00-999999d00ebe"
+  },
+  "dependencies": {
+    "alexa-app": "^3.2.0",
+    "alexa-sdk": "^1.0.7",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "request-promise": "^4.1.1"
+  }
+}
