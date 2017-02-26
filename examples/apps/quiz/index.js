@@ -57,8 +57,16 @@ app.intent('game', {
         var questions = res.session('questions');
         var numberOfQuestion = res.session('numberOfQuestion');
         var currentQuestion = questions[numberOfQuestion];
-        currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
-        res.say(currentQuestion).send();
+        if (currentQuestion){
+            res.session('currentQuestion', currentQuestion);
+            currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
+            res.say(currentQuestion).send();
+        }
+        else {
+            var prompt = 'No more questions';
+            var reprompt = 'Tell me another category please Bro';
+            res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+        }
     }
 );
 
@@ -73,13 +81,40 @@ app.intent('AMAZON.NextIntent', {
         var questions = res.session('questions');
         var currentQuestion = questions[numberOfQuestion];
         if (currentQuestion){
+            res.session('currentQuestion', currentQuestion);
             currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
             res.say(currentQuestion).send();
         }
         else {
-            var prompt = 'No more questions';
-            var reprompt = 'Tell me another category please Bro';
-            res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+            var correct = res.session('correct');
+            var msg = 'You guessed ' + correct + ' questions correctly';
+            res.say(msg).send();
+        }
+    }
+);
+
+app.intent('give_answer', {
+        'slots': {
+            'ANSWER': 'BOOLEAN',
+        },
+        'utterances': ['my answer is {-|ANSWER}']
+    },
+    function(req, res) {
+        var answer = req.slot('ANSWER');
+        if (_.isEmpty(answer)) {
+            var prompt = 'Please say true or false';
+            res.say(prompt).reprompt(prompt).shouldEndSession(false).send();
+            return true;
+        } else {
+            var currentQuestion = res.session('currentQuestion');
+            if (currentQuestion.correct_answer.toLowerCase() === answer){
+                var correct = res.session('correct') + 1;
+                res.session('correct', correct);
+                res.say('Correct!, say next to continue').send();
+            }
+            else {
+                res.say('Incorrect!, say next to continue').send();
+            }
         }
     }
 );
