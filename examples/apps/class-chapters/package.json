@@ -4,6 +4,7 @@
   "description": "Test bot for Amazon's Alexa AI",
   "main": "index.js",
   "dependencies": {
+    "@google-cloud/translate": "^0.7.0",
     "alexa-app": "^3.2.0",
     "alexa-sdk": "^1.0.7",
     "chai": "^3.5.0",
