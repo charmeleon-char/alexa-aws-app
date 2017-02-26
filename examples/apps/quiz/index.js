@@ -37,6 +37,15 @@ app.intent('quiz', {
     }
 );
 
+app.intent('game', {
+        'slots': {},
+        'utterances': ['start game']
+    },
+    function(req, res) {
+        
+    }
+);
+
 //hack to support custom utterances in utterance expansion string
 var utterancesMethod = app.utterances;
 app.utterances = function() {
