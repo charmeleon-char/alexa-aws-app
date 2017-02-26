@@ -12,7 +12,7 @@ app.launch(function(req, res) {
 
 app.intent('search_keyword', {
         'slots': {
-            'KEYWORD': 'KEYWORD'
+            'KEYWORD': 'AMAZON.LITERAL'
         },
         'utterances': ['{|search|look|seek} {|for} {-|KEYWORD}']
     },
@@ -21,16 +21,22 @@ app.intent('search_keyword', {
         var keyword = req.slot('KEYWORD');
         var reprompt = 'Tell me a keyword for search information.';
         if (_.isEmpty(keyword)) {
-            var prompt = 'Sorry, there are no results with that keyword!.';
+            var prompt = 'Sorry, the keyword can not be empty.';
             res.say(prompt).reprompt(reprompt).shouldEndSession(false);
             return true;
         } else {
             var searchDataHelper = new SearchDataHelper();
-
-            searchDataHelper.requestProgram(keyword).then(function(programRecomment) {
-                var response = 'Program name: ' + programRecomment['results'][0]['name'] + ' Description: ' + programRecomment['results'][0]['description'];
-                console.log(response);
-                res.say(response).send();
+            searchDataHelper.requestProgram(keyword).then(function(response) {
+                if(response['results'].length > 0) {
+                    var resp = 'Results: ';
+                    response['results'].forEach(function (element, index, array){
+                        resp = resp + element['name'] + ', ';
+                    });
+                    res.say(resp).send();
+                } else {
+                    var prompt = 'Sorry, there are no results with that keyword!.';
+                    res.say(resp).send();
+                }
             }).catch(function(err) {
                 var prompt = err;
                 res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
@@ -40,7 +46,6 @@ app.intent('search_keyword', {
     }
 );
 
-//hack to support custom utterances in utterance expansion string
 var utterancesMethod = app.utterances;
 app.utterances = function() {
     return utterancesMethod().replace(/\{\-\|/g, '{');

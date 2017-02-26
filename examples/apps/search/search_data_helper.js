@@ -1,7 +1,7 @@
 'use strict';
 var _ = require('lodash');
 var rp = require('request-promise');
-var ENDPOINT = 'https://liu-search-api-dev.appspot.com/api/v1/search/?content_type=programs&language=en&limit=1&offset=1&available_in_languages=English&keywords=';
+var ENDPOINT = 'https://liu-search-api-dev.appspot.com/api/v1/search/?content_type=programs&language=en&limit=100&offset=1&available_in_languages=English&keywords=';
 
 function SearchDataHelper() {}
 
