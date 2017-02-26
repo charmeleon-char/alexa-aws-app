@@ -13,7 +13,7 @@ function Questions() { }
 
 Questions.prototype.getByCategory = function(categoryName) {
     var category = CATEGORIES[categoryName.toLowerCase()];
-    var url = ENDPOINT + 'amount=3&type=boolean&category=' + category;
+    var url = ENDPOINT + '?amount=3&type=boolean&category=' + category;
     var options = {
         method: 'GET',
         uri: url,
