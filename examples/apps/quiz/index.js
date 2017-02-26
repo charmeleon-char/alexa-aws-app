@@ -28,10 +28,11 @@ app.intent('quiz', {
         } else {
             var questions = new Questions();
             questions.getByCategory(category).then(function(response) {
-                quiz = response.results;
+                var quiz = response.body.results;
+                var question = questions.parseQuestion(quiz[0].question);
+                res.say(question).send();
             });
-            res.say(quiz[0]);
-
+            return false;
         }
     }
 );

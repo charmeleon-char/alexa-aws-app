@@ -23,4 +23,10 @@ Questions.prototype.getByCategory = function(categoryName) {
     return rp(options);
 };
 
+Questions.prototype.parseQuestion = function(question) {
+    question = question.replace(/&#(\d+);/g, function (m, n) { return String.fromCharCode(n); })
+    question = question.replace(/&quot;/g,'"');
+    return question;
+};
+
 module.exports = Questions;
