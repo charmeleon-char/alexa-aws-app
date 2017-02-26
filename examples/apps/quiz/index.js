@@ -9,7 +9,9 @@ var Questions = require('./questions');
 app.launch(function(req, res) {
     var prompt = 'Lets play a quiz yeahh';
     var numberOfQuestion = 0;
+    var correct = 0;
     res.session('numberOfQuestion', numberOfQuestion);
+    res.session('correct', correct);
     res.say(prompt).reprompt(prompt).shouldEndSession(false);
 });
 
@@ -24,7 +26,7 @@ app.intent('quiz', {
         if (_.isEmpty(category)) {
             var prompt = 'I didn\'t hear a category name. Tell me the category please Bro';
             var reprompt = 'Tell me another category please Bro';
-            res.say(prompt).reprompt(reprompt).shouldEndSession(false);
+            res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
             return true;
         } else {
             var questions = new Questions();
@@ -33,12 +35,11 @@ app.intent('quiz', {
                 if (_.isEmpty(quiz)) {
                     var prompt = 'I didn\'t find any questiosn with that category. Tell me another category please Bro';
                     var reprompt = 'Tell me another category please Bro';
-                    res.say(prompt).reprompt(reprompt).shouldEndSession(false);
-                    return true;
+                    res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
                 } else {
                     res.session('questions', quiz);
                     var prompt = 'Say start game to begin.';
-                    res.say(quiz[0].type).reprompt(prompt).shouldEndSession(false);
+                    res.say(prompt).reprompt(prompt).shouldEndSession(false).send();
                 }
             });
             return false;
@@ -51,6 +52,28 @@ app.intent('game', {
         'utterances': ['start game']
     },
     function(req, res) {
+        res.session('numberOfQuestion', 0);
+        var questionsHelper = new Questions();
+        var questions = res.session('questions');
+        var numberOfQuestion = res.session('numberOfQuestion');
+        var currentQuestion = questions[numberOfQuestion];
+        currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
+        res.say(currentQuestion).send();
+    }
+);
+
+app.intent('AMAZON.NextIntent', {
+        'slots': {},
+        'utterances': ['next']
+    },
+    function(req, res) {
+        var numberOfQuestion = res.session('numberOfQuestion') + 1;
+        res.session('numberOfQuestion', numberOfQuestion);
+        var questionsHelper = new Questions();
+        var questions = res.session('questions');
+        var currentQuestion = questions[numberOfQuestion];
+        currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
+        res.say(currentQuestion).send();
     }
 );
 
