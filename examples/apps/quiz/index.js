@@ -72,8 +72,15 @@ app.intent('AMAZON.NextIntent', {
         var questionsHelper = new Questions();
         var questions = res.session('questions');
         var currentQuestion = questions[numberOfQuestion];
-        currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
-        res.say(currentQuestion).send();
+        if (currentQuestion){
+            currentQuestion = questionsHelper.parseQuestion(currentQuestion.question);
+            res.say(currentQuestion).send();
+        }
+        else {
+            var prompt = 'No more questions';
+            var reprompt = 'Tell me another category please Bro';
+            res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+        }
     }
 );
 
