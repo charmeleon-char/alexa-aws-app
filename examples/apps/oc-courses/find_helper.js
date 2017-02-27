@@ -20,7 +20,7 @@ FINDHelper.prototype.requestListing = function(content, terms) {
 FINDHelper.prototype.getListing = function(content, terms) {
     var options = {
         method: 'GET',
-        uri: ENDPOINT + terms + '&content_type=' + content,
+        uri: ENDPOINT + terms + '&content_type=' + content + 's',
         resolveWithFullResponse: true,
         json: true,
         headers: {
